@@ -16,11 +16,12 @@ Two things work together here:
    install: pip install --break-system-packages flask markdown pygments gunicorn
    ```
 
-2. **Persistence that survives redeploys.** The SQLite DB lives at
-   `$DATA_DIR/markdown-notes.db` with `DATA_DIR=/home/developer/data` (set via
-   `env:`), which is **outside the rsync zone**. The synced app dir is wiped and
-   re-rsynced on every deploy; `$DATA_DIR` is not — so your notes stay put. The
-   app `mkdir -p`s the dir at startup since a fresh workspace won't have it.
+2. **Workspace volume-backed persistence.** `rig.yaml` declares a `data` volume at
+   `/home/developer/data` and opts the app into it with `volumes: [data]`. The
+   SQLite DB lives at `$DATA_DIR/markdown-notes.db`, with `DATA_DIR` pointing at
+   that mount. The synced app dir is wiped and re-rsynced on every deploy; the
+   volume is not, so your notes stay put. The app `mkdir -p`s the dir at startup
+   since a fresh workspace won't have it.
 
 ## How the deploy works
 
@@ -46,12 +47,12 @@ No required env — `DATA_DIR` is set in `rig.yaml`.
   syntax highlighting.
 - The **persisted in SQLite** pill and the note count in the header card.
 - Redeploy (`rig deploy`) and confirm your notes are **still
-  there** — that's `$DATA_DIR` surviving the rsync wipe.
+  there** — that's the `data` volume surviving the rsync wipe.
 
 ## Notes
 
-- **Persistence: yes.** SQLite at `$DATA_DIR/markdown-notes.db`, outside the
-  rsync zone — durable across redeploys.
+- **Persistence: yes.** SQLite at `$DATA_DIR/markdown-notes.db` on the `data`
+  workspace volume — durable across redeploys.
 - Health: `GET /healthz` → `{"ok": true}`; the process binds `0.0.0.0:8080`
   under gunicorn.
 - Stack: Python · Flask, served by gunicorn (installed via the recipe `install:` step).

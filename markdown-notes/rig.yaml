@@ -3,10 +3,15 @@ port: 8080
 # Light Flask + SQLite app — 1GB is plenty.
 workspace:
   resources: { ramMb: 1024, vcpuCount: 1, diskSizeMb: 3072 }
+  volumes:
+    - name: data
+      mountPath: /home/developer/data
+      sizeMb: 1024
 install: pip install --break-system-packages flask markdown pygments gunicorn
 start: gunicorn --bind 0.0.0.0:8080 app:app
 health:
   path: /healthz
   timeoutSeconds: 30
+volumes: [data]
 env:
   DATA_DIR: /home/developer/data

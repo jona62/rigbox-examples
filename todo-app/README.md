@@ -14,6 +14,8 @@ Multi-app **loopback service discovery** with split visibility:
   first.
 - `todo-web` is `visibility: public`; `todo-api` declares **no** visibility, so it
   stays **private** (no public subdomain, not internet-reachable).
+- `todo-api` opts into the workspace `data` volume and stores todos in SQLite at
+  `$DATA_DIR/todos.db`, so user-created rows survive redeploys.
 - Next.js route handlers (`app/api/todos/*`) proxy the browser's same-origin
   requests to the private API over loopback. The home page is server-rendered and
   fetches the initial list over the same loopback path; the page footer shows the
@@ -38,7 +40,7 @@ No env or secrets required.
 - The **todo-api** app has no public URL; hitting its subdomain (if any) auth-gates.
   It is only reachable from todo-web over `127.0.0.1`.
 - Todos persist in SQLite at `$DATA_DIR/todos.db`
-  (`/home/developer/data/todos.db`) and survive redeploys.
+  (`/home/developer/data/todos.db`) on the workspace `data` volume.
 
 ## Param to flip
 

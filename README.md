@@ -15,12 +15,12 @@ cd <example> && rig deploy
 |---|---|---|
 | [`quickstart/`](./quickstart/) | TypeScript (Hono) | the canonical single-app `rig.yaml`, and **both** deploy sources — local rsync vs `source: { kind: git }` |
 | [`ai-chat/`](./ai-chat/) | Python · FastAPI | the **managed AI proxy** (`ai: managed: true`) + a portable model alias as a validated `select` param |
-| [`todo-app/`](./todo-app/) | Next.js (React/TS) + TS API | multi-app **loopback service discovery** (`dependsOn`) + public/private visibility + SQLite |
+| [`todo-app/`](./todo-app/) | Next.js (React/TS) + TS API | multi-app **loopback service discovery** (`dependsOn`) + public/private visibility + volume-backed SQLite |
 | [`bluegreen-blog/`](./bluegreen-blog/) | Ruby · Sinatra | **bluegreen + promote**, and theme selection via a server-validated `select` param (not a raw env var) |
 | [`webhook-receiver/`](./webhook-receiver/) | Python · Flask | `secrets:` + a server-generated `credentials:` + a `select` param for the signing algorithm |
 | [`scheduled-digest/`](./scheduled-digest/) | TypeScript | a background worker loop + `/healthz` + a `number` param for the schedule |
 | [`url-shortener/`](./url-shortener/) | Python · Django | the **full validated param set** (url/string/number/boolean/select/email/secret/textarea) + SQLite migrations |
-| [`markdown-notes/`](./markdown-notes/) | Python · Flask | **SQLite persistence** that survives redeploys (`$DATA_DIR` outside the rsync zone) + Markdown rendering |
+| [`markdown-notes/`](./markdown-notes/) | Python · Flask | **workspace volume-backed SQLite persistence** + Markdown rendering |
 
 Every example deploys with the same command — `rig deploy`. Most rsync code and
 run `install:` on the VM. Several declare a `Dockerfile`, which makes
@@ -78,8 +78,10 @@ The point of the suite is to model the *right* primitive for each job:
 - **Validated config** is a `param` with a fixed option set (`type: select`), not a
   free-form env var — the server validates it and it's live-editable with
   `rig app param set <key>=<value>`. Fixed infra (paths, base URLs) stays in `env:`.
-- **Persistence** lives under `DATA_DIR=/home/developer/data`, *outside* the rsync
-  zone, so SQLite DBs and files survive every redeploy and bluegreen cut-over.
+- **Persistence** uses a `workspace.volumes` declaration plus explicit app
+  `volumes: [data]` opt-in. Apps write durable data under
+  `DATA_DIR=/home/developer/data`, so SQLite DBs and files survive every redeploy
+  and bluegreen cut-over.
 - **Visibility** is declared in `rig.yaml` (`visibility: public` / `private` /
   `{ emails: [...] }`) so a redeploy keeps it — only an app's front door is public;
   siblings reach private apps over loopback via `dependsOn`.

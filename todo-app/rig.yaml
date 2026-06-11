@@ -1,6 +1,10 @@
 workspace:
   image: base
   resources: { ramMb: 2048, vcpuCount: 2, diskSizeMb: 10240 }
+  volumes:
+    - name: data
+      mountPath: /home/developer/data
+      sizeMb: 1024
 
 apps:
   todo-api:
@@ -12,6 +16,7 @@ apps:
     start: npm start
     # No visibility key → private. Reachable only by siblings over loopback.
     health: { path: /healthz, timeoutSeconds: 30 }
+    volumes: [data]
     env:
       DATA_DIR: /home/developer/data
       PORT: "5100"

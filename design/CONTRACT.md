@@ -32,22 +32,29 @@ The `install:` block runs once per deploy from the app's synced directory. The
 ## Persistence (survives redeploys)
 
 The synced app directory is **wiped and re-rsynced on every deploy** — never store
-data there. Durable state lives under `DATA_DIR=/home/developer/data` (set it via
-`env:`), which is outside the rsync zone. SQLite DBs, uploaded files, logs → under
-`$DATA_DIR`. Create the dir at startup (`mkdir -p`) since it may not exist on a
-fresh workspace.
+data there. Durable state belongs on an explicit workspace volume. Declare it once
+under `workspace.volumes`, opt each app into the mount with `volumes: [data]`, and
+set `DATA_DIR=/home/developer/data` via `env:`. SQLite DBs, uploaded files, logs →
+under `$DATA_DIR`. Create the dir at startup (`mkdir -p`) since it may not exist on
+a fresh workspace.
 
 ## rig.yaml — single-app shape
 
 ```yaml
 name: my-app
 port: 8080
+workspace:
+  volumes:
+    - name: data
+      mountPath: /home/developer/data
+      sizeMb: 1024
 start: <command that binds 0.0.0.0:8080>
 install: |
   <one-time setup>
 health:
   path: /healthz
   timeoutSeconds: 30
+volumes: [data]
 env:
   DATA_DIR: /home/developer/data
 ```
@@ -58,6 +65,10 @@ env:
 workspace:
   image: base
   resources: { ramMb: 1024, vcpuCount: 1, diskSizeMb: 3072 }   # tune per app
+  volumes:
+    - name: data
+      mountPath: /home/developer/data
+      sizeMb: 1024
 apps:
   api:
     path: ./api
@@ -65,6 +76,9 @@ apps:
     start: …
     install: …
     health: { path: /healthz, timeoutSeconds: 30 }
+    volumes: [data]
+    env:
+      DATA_DIR: /home/developer/data
   web:
     path: ./web
     port: 5101
