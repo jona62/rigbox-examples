@@ -8,6 +8,11 @@ start: npm start
 health:
   path: /healthz
   timeoutSeconds: 30
+reproducible: true
+source:
+  kind: git
+  repo: https://github.com/jona62/rigbox-examples.git
+  branch: main
 
 # This default config deploys the LOCAL working copy (rsync). To deploy straight
 # from git instead, uncomment the block below — that one change is the whole
