@@ -16,7 +16,7 @@ apps:
     start: npm start
     # No visibility key → private. Reachable only by siblings over loopback.
     health: { path: /healthz, timeoutSeconds: 30 }
-    volumes: [data]
+    volumes: [ data ]
     env:
       DATA_DIR: /home/developer/data
       PORT: "5100"
@@ -32,12 +32,22 @@ apps:
           - { value: "20", label: "20 items" }
           - { value: "50", label: "50 items" }
           - { value: "100", label: "100 items" }
+    reproducible: true
+    source:
+      kind: git
+      repo: https://github.com/jona62/rigbox-examples.git
+      branch: main
 
   todo-web:
     path: ./todo-web
     port: 5101
     install: npm ci && npm run build
     start: npx next start -H 0.0.0.0 -p 5101
-    dependsOn: [todo-api]   # injects RIGBOX_TODO_API_URL=http://127.0.0.1:5100
-    visibility: public      # only the front door is public
+    dependsOn: [ todo-api ] # injects RIGBOX_TODO_API_URL=http://127.0.0.1:5100
+    visibility: public # only the front door is public
     health: { path: /healthz, timeoutSeconds: 90 }
+    reproducible: true
+    source:
+      kind: git
+      repo: https://github.com/jona62/rigbox-examples.git
+      branch: main
