@@ -26,14 +26,14 @@ install: |
 # gateway is the front door. Don't set this app `public` without dropping
 # --no-token. --headless leaves browser-launch off (we're behind a proxy).
 start: >-
-  /usr/local/bin/marimo edit
-  --host 0.0.0.0 --port 2718
-  --headless --no-token --no-skew-protection
-  --allow-origins '*'
-  /home/developer/data
+  /usr/local/bin/marimo edit --host 0.0.0.0 --port 2718 --headless --no-token --no-skew-protection --allow-origins '*' /home/developer/data
 health:
   # Marimo's healthcheck endpoint.
   path: /health
   timeoutSeconds: 60
 env:
   DATA_DIR: /home/developer/data
+source:
+  kind: git
+  repo: https://github.com/rigbox-dev/rigbox-examples.git
+  branch: main
