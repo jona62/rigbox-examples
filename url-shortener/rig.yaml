@@ -1,9 +1,11 @@
 workspace:
   image: base
   resources:
-    ramMb: 1536
+    ramMb: 3072
     vcpuCount: 1
-    diskSizeMb: 3072
+    diskSizeMb: 10240
+  deployment:
+    strategy: incremental
 
 apps:
   web:
@@ -93,3 +95,7 @@ apps:
         group: Display
         default: "Paste a long URL and get a short code. Links persist across redeploys."
         envVar: WELCOME_MESSAGE
+    source:
+      kind: git
+      repo: https://github.com/jona62/rigbox-examples.git
+      branch: main
