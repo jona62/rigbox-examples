@@ -5,6 +5,8 @@ workspace:
     - name: data
       mountPath: /home/developer/data
       sizeMb: 1024
+  deployment:
+    strategy: incremental
 
 apps:
   todo-api:
