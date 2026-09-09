@@ -5,6 +5,8 @@ workspace:
     - name: data
       mountPath: /home/developer/data
       sizeMb: 1024
+  deployment:
+    strategy: incremental
 
 apps:
   todo-api:
@@ -36,7 +38,7 @@ apps:
     source:
       kind: git
       repo: https://github.com/jona62/rigbox-examples.git
-      branch: main
+      branch: rigbox/deploy/ws-9bp5gjik
 
   todo-web:
     path: ./todo-web
@@ -50,4 +52,4 @@ apps:
     source:
       kind: git
       repo: https://github.com/jona62/rigbox-examples.git
-      branch: main
+      branch: rigbox/deploy/ws-9bp5gjik
