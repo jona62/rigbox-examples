@@ -22,7 +22,7 @@ export default async function Home() {
       <main className="rb-container">
         <div className="rb-card rb-stack">
           <div className="rb-row" style={{ justifyContent: "space-between" }}>
-            <h1 style={{ margin: 0 }}>Things to do</h1>
+            <h1 style={{ margin: 0 }}>Tinz to do</h1>
             <span className={`rb-pill ${apiOk ? "rb-pill-ok" : "rb-pill-danger"}`}>
               {apiOk ? "todo-api connected" : "todo-api unreachable"}
             </span>
