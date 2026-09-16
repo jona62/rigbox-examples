@@ -2,7 +2,7 @@ workspace:
   image: base
   resources:
     ramMb: 3072
-    vcpuCount: 1
+    vcpuCount: 2
     diskSizeMb: 10240
   deployment:
     strategy: incremental
