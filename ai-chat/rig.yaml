@@ -1,24 +1,32 @@
-name: ai-chat
-port: 8080
-# Light FastAPI app behind the managed AI proxy — 1GB is plenty.
+apps:
+  ai-chat:
+    port: 8080
+    install: pip install --break-system-packages fastapi uvicorn pydantic httpx
+    start: uvicorn chat:app --host 0.0.0.0 --port 8080
+    health:
+      path: /healthz
+      timeoutSeconds: 30
+    ai:
+      managed: true
+    params:
+      - key: model
+        type: select
+        label: Model alias
+        description: Portable model alias resolved by the managed AI proxy.
+        group: AI
+        default: rigbox/default
+        envVar: MODEL
+        options:
+          - { value: rigbox/default, label: "Default" }
+          - { value: rigbox/fast, label: "Fast" }
+          - { value: rigbox/free, label: "Free" }
+    path: .
+    source:
+      kind: git
+      repo: https://github.com/jona62/rigbox-examples.git
+      branch: rigbox/deploy/ws-rtzhgu0m
 workspace:
   resources: { ramMb: 1024, vcpuCount: 1, diskSizeMb: 3072 }
-install: pip install --break-system-packages fastapi uvicorn pydantic httpx
-start: uvicorn chat:app --host 0.0.0.0 --port 8080
-health:
-  path: /healthz
-  timeoutSeconds: 30
-ai:
-  managed: true
-params:
-  - key: model
-    type: select
-    label: Model alias
-    description: Portable model alias resolved by the managed AI proxy.
-    group: AI
-    default: rigbox/default
-    envVar: MODEL
-    options:
-      - { value: rigbox/default, label: "Default" }
-      - { value: rigbox/fast, label: "Fast" }
-      - { value: rigbox/free, label: "Free" }
+  image: base
+  deployment:
+    strategy: incremental
