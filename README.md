@@ -1,9 +1,24 @@
-# rigbox-examples
+# Rigbox Examples
+
+Example apps and catalog reproductions that deploy on Rigbox with one command.
+
+This repository is a fork of [`rigbox-dev/rigbox-examples`](https://github.com/rigbox-dev/rigbox-examples).
+
+## What it is
 
 A suite of small, recognizable products — each a **different stack**, each with a
 **minimal UI in one shared design language**, each demonstrating **one Rigbox
 capability** with the proper platform primitive. Every example is described by a
-single root `rig.yaml` and deploys in one command from a fresh clone:
+single root `rig.yaml` and deploys in one command from a fresh clone.
+
+## Stack
+
+Python (Flask, FastAPI, Django), TypeScript (Hono, Next.js), Ruby (Sinatra), shell
+scripts, and YAML manifests (`rig.yaml`). Some apps use SQLite.
+
+## Run it
+
+Install the CLI (see [Requirements](#requirements)), then deploy any example:
 
 ```bash
 cd <example> && rig deploy
@@ -187,3 +202,7 @@ Fork an example, connect your Rigbox account, and choose a new or existing works
 | [webhook-receiver](./webhook-receiver/) | [Deploy to Rigbox](https://rigbox.dev/deploy?repo=rigbox-dev%2Frigbox-examples&ref=main&path=webhook-receiver%2Frig.yaml) |
 
 See the [deploy-button guide](https://docs.rigbox.dev/guides/deploy-button) for forks, runtime secrets, configuration, and retries.
+
+## License
+
+MIT. See [LICENSE](./LICENSE).
